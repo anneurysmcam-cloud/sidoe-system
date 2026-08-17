@@ -28,16 +28,17 @@ import streamlit as st
 
 _LOGO_PATH = Path(__file__).resolve().parent.parent / "tracking" / "logo_one.png"
 
-# Los 4 generadores de demanda oficiales del sistema (ver
-# CAMPOS_HIBRIDOS_INDICADORES en config.py — mismos 4 valores del Excel
-# matriz). El nombre completo es solo descriptivo para esta pantalla; el
-# valor que se guarda en BD sigue siendo la sigla exacta ("END", "ODS",
-# "CMV", "PNPSP") y nunca debe tocarse desde aquí.
-_GENERADORES_DEMANDA = [
-    ("END", "Estrategia Nacional de Desarrollo 2030"),
-    ("ODS", "Objetivos de Desarrollo Sostenible"),
-    ("PNPSP", "Plan Nacional Plurianual del Sector Público"),
-    ("CMV", "Consenso de Montevideo sobre Población y Desarrollo"),
+# Los 3 niveles del Código Nacional de Buenas Prácticas para las
+# Estadísticas Oficiales (CNBPE) — estructura oficial de la ONE alineada con
+# el Marco Nacional de Aseguramiento de Calidad de la ONU (NQAF) y el Código
+# Regional de CEPAL. El CNBPE se organiza en 3 niveles, 15 principios y 67
+# buenas prácticas (requisitos de calidad). En la Herramienta de
+# Autodiagnóstico estos niveles corresponden a las hojas GEI, GPE y GRE.
+# Solo descriptivo para esta pantalla — no se guarda nada en BD desde aquí.
+_NIVELES_CNBPE = [
+    ("GEI", "Gestión del Entorno Institucional · 5 principios"),
+    ("GPE", "Gestión del Proceso Estadístico · 4 principios"),
+    ("GRE", "Gestión de los Resultados Estadísticos · 6 principios"),
 ]
 
 _OPCION_POR_BOTON = {
@@ -242,7 +243,8 @@ def _inyectar_estilos() -> None:
             font-weight: 700;
             font-size: 0.82rem;
             color: #4a90e2;
-            min-width: 52px;
+            min-width: 46px;
+            white-space: nowrap;
         }
         .sidoe-chip-name {
             color: var(--text-color);
@@ -296,11 +298,12 @@ def mostrar_landing() -> str | None:
           <div class="sidoe-hero-badge"><img src="data:image/png;base64,{logo_b64}" /></div>
           <p class="sidoe-hero-eyebrow">Oficina Nacional de Estadística</p>
           <h1 class="sidoe-hero-title">SIDOE</h1>
-          <p class="sidoe-hero-subtitle">Sistema Integrado de Demanda y Oferta Estadística</p>
+          <p class="sidoe-hero-subtitle">Sistema de Autodiagnóstico para la Calidad de la Producción Estadística</p>
           <p class="sidoe-hero-tagline">
-            La plataforma que centraliza y da seguimiento a los indicadores
-            estadísticos que cruzan la demanda de políticas públicas con la oferta
-            real de información del país.
+            Herramienta institucional de la Oficina Nacional de Estadística para
+            evaluar el cumplimiento del Código Nacional de Buenas Prácticas para
+            las Estadísticas Oficiales, alineado con los Principios Fundamentales
+            de la ONU y el Código Regional de CEPAL.
           </p>
         </div>
         """,
@@ -315,10 +318,10 @@ def mostrar_landing() -> str | None:
               <div class="sidoe-card-icon">🧭</div>
               <div class="sidoe-card-title">¿Qué puedes hacer aquí?</div>
               <ul class="sidoe-card-list">
-                <li>Consulta del estado de indicadores oficiales</li>
-                <li>Visualización de fichas técnicas en PDF</li>
-                <li>Exploración del dashboard interactivo</li>
-                <li>Evaluación del nivel de factibilidad</li>
+                <li>Autodiagnóstico del cumplimiento por principio de calidad</li>
+                <li>Evaluación de los 3 niveles: GEI, GPE y GRE</li>
+                <li>Seguimiento del avance con el estado de cada elemento</li>
+                <li>Planes de acción y mejora para los elementos pendientes</li>
               </ul>
             </div>
             """,
@@ -331,11 +334,11 @@ def mostrar_landing() -> str | None:
               <div class="sidoe-card-icon">🔗</div>
               <div class="sidoe-card-title">El sistema</div>
               <p class="sidoe-card-text">
-                SIDOE es la plataforma de la Oficina Nacional de Estadística (ONE)
-                para consultar, en un solo lugar, los indicadores estadísticos
-                oficiales del país: qué política pública los origina, de dónde
-                salen sus datos y qué tan factible es producirlos — siempre
-                actualizado y validado.
+                Plataforma de la Oficina Nacional de Estadística (ONE) que lleva a
+                un entorno digital la Matriz de Autodiagnóstico para la Calidad de
+                la Producción Estadística: permite verificar, elemento por
+                elemento, si la práctica institucional cumple con las buenas
+                prácticas del Código y registrar la evidencia que lo respalda.
               </p>
             </div>
             """,
@@ -347,14 +350,17 @@ def mostrar_landing() -> str | None:
             f'<span class="sidoe-chip-code">{sigla}</span>'
             f'<span class="sidoe-chip-name">{nombre}</span>'
             f"</div>"
-            for sigla, nombre in _GENERADORES_DEMANDA
+            for sigla, nombre in _NIVELES_CNBPE
         )
         st.markdown(
             f"""
             <div class="sidoe-card">
-              <div class="sidoe-card-icon">🧩</div>
-              <div class="sidoe-card-title">Generadores de demanda</div>
+              <div class="sidoe-card-icon">✅</div>
+              <div class="sidoe-card-title">Niveles del Código</div>
               <div class="sidoe-chip-list">{chips}</div>
+              <p class="sidoe-card-text" style="margin-top:0.7rem; font-size:0.82rem;">
+                3 niveles · 15 principios · 67 buenas prácticas de calidad
+              </p>
             </div>
             """,
             unsafe_allow_html=True,
@@ -364,16 +370,16 @@ def mostrar_landing() -> str | None:
         """
         <div class="sidoe-stats">
           <div class="sidoe-stat">
-            <div class="sidoe-stat-num">+800</div>
-            <div class="sidoe-stat-label">indicadores activos</div>
+            <div class="sidoe-stat-num">3</div>
+            <div class="sidoe-stat-label">niveles de gestión</div>
           </div>
           <div class="sidoe-stat">
-            <div class="sidoe-stat-num">+1000</div>
-            <div class="sidoe-stat-label">fuentes oficiales empleadas</div>
+            <div class="sidoe-stat-num">15</div>
+            <div class="sidoe-stat-label">principios de calidad</div>
           </div>
           <div class="sidoe-stat">
-            <div class="sidoe-stat-num">17</div>
-            <div class="sidoe-stat-label">sectores cubiertos</div>
+            <div class="sidoe-stat-num">67</div>
+            <div class="sidoe-stat-label">buenas prácticas</div>
           </div>
         </div>
         """,
@@ -386,7 +392,7 @@ def mostrar_landing() -> str | None:
     opcion_elegida = None
     with b1:
         if st.button(
-            "🔍 Consultar indicadores", width='stretch', type="primary"
+            "🔍 Consultar autodiagnóstico", width='stretch', type="primary"
         ):
             opcion_elegida = _OPCION_POR_BOTON["consultar"]
     with b2:
