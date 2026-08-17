@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sidoe"
+version = "1.0.0"
+description = "Sistema Integrado de Demanda y Oferta Estadística — ONE RD"
+requires-python = ">=3.10"
+dependencies = [
+    "streamlit",
+    "pandas",
+    "numpy",
+    "openpyxl",
+    "plotly",
+    "fpdf2",
+    "bcrypt",
+    "pyotp",
+    "qrcode[pil]",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-timeout",
+    "pytest-cov",
+    "ruff",
+]
+
+[tool.setuptools]
+# Incluye sub-paquetes (data/, features/, models/, etc.)
+# py-modules añade módulos sueltos en la raíz (config.py)
+py-modules = ["config"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+    "data*",
+    "features*",
+    "models*",
+    "security*",
+    "tracking*",
+    "utils*",
+    "views*",
+]
+
+[tool.ruff.lint]
+# `select` explícito y deliberado: el comportamiento "por defecto" de Ruff
+# (sin `select`) no está garantizado entre versiones — verificado en la
+# práctica: el mismo código, sin cambios, pasó de 7 hallazgos reales a 239+
+# solo por instalar una versión más nueva de Ruff (requirements-dev.txt
+# tenía `ruff` sin pin). E4/E7/E9/F es el conjunto que Ruff aplicaba por
+# defecto cuando este proyecto se limpió originalmente (ver commit
+# fc94167 "chore(lint): configurar Ruff y limpiar los 7 hallazgos reales").
+# Ampliar este `select` (p. ej. sumar B, C4, BLE, S) es una decisión
+# deliberada a futuro — implica revisar y corregir los hallazgos nuevos
+# antes de fusionar, no algo que deba colarse por un upgrade silencioso.
+select = ["E4", "E7", "E9", "F"]
+#
+# E701 (multiple statements on one line — colon): patrón deliberado
+#   `with colX: var = widget(...)` para layout compacto de columnas
+#   Streamlit en views/crear_indicador.py y views/actualizar_indicador.py.
+# E402 (module import not at top of file): orden de bootstrap intencional
+#   en app.py — logging.basicConfig() debe correr antes de importar
+#   data.database (para capturar sus logs de inicialización), y
+#   asegurar_permisos_db(DB_PATH) debe ejecutarse antes del resto de
+#   imports. Las vistas (views/*) ya NO se importan a nivel de módulo:
+#   se cargan de forma perezosa dentro del enrutador (_importar_vista()
+#   en app.py) para no bloquear la pantalla de login con dependencias
+#   pesadas (pandas, plotly, fpdf2, openpyxl).
+ignore = ["E701", "E402"]

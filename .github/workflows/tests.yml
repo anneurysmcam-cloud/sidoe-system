@@ -1,0 +1,38 @@
+name: Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        # Se instala desde requirements-dev.lock (versiones exactas resueltas,
+        # ver ese archivo para cómo regenerarlo) en lugar de
+        # requirements-dev.txt, para que CI sea reproducible y no dependa de
+        # qué versión de cada paquete esté disponible el día que corre el
+        # workflow (mismo motivo por el que se pineó `ruff` originalmente).
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.lock
+
+      - name: Lint (Ruff)
+        run: |
+          ruff check .
+
+      - name: Correr suite de tests
+        run: |
+          pytest -m "not requiere_bd_local"

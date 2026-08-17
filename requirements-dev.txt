@@ -1,0 +1,18 @@
+-r requirements.txt
+
+# Testing (requerido para correr `pytest`; pytest.ini usa --timeout,
+# lo cual depende del plugin pytest-timeout)
+pytest
+pytest-timeout
+pytest-cov
+pypdf  # solo test: extraer texto del PDF generado y verificar contenido (punto 5)
+
+# Lint
+# Versión fijada deliberadamente: sin pin, Ruff instala la última versión
+# disponible en cada corrida de CI. Sin `select` explícito en pyproject.toml,
+# el conjunto de reglas "por defecto" de Ruff puede variar entre versiones
+# (verificado: pasamos de 7 hallazgos reales a 239+ sin cambiar una sola
+# línea de código, solo por una versión nueva de Ruff). Actualizar este pin
+# de forma deliberada, no automática, y re-validar `ruff check .` = 0 issues
+# tras cada bump.
+ruff==0.16.0

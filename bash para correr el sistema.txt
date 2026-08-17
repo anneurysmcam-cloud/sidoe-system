@@ -1,0 +1,31 @@
+Para correr el host
+python -m streamlit run app.py
+
+Para instalar todas las dependencias/libreria
+pip install -r requirements.txt
+pip list
+
+Para el ngrok
+ngrok config add-authtoken TU_TOKEN_AQUI   # ver en https://dashboard.ngrok.com/get-started/your-authtoken — NUNCA commitear el valor real
+Si tu app corre en localhost:8501
+ngrok http 8501
+
+#correr el archivo .toml
+pip install -e .
+
+#si faltara alguna dependencia
+pip install -r requirements.txt
+
+Para correr los tests 
+
+# Suite completa
+python3 -m pytest tests/ -v
+
+# Solo unitarios (sin BD, en < 1s)
+python3 -m pytest tests/test_01_engine_factibilidad.py tests/test_02_auth_seguridad.py -v
+
+# Solo regresión (para verificar antes de cada deploy)
+python3 -m pytest tests/test_07_regresion.py -v
+
+# test de cobertura
+pytest --cov=sidoe_system tests/

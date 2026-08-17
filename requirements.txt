@@ -1,0 +1,9 @@
+pandas
+numpy
+openpyxl
+streamlit
+plotly
+fpdf2
+bcrypt
+pyotp
+qrcode[pil]

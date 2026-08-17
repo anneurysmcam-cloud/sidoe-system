@@ -1,0 +1,4 @@
+# Archivo .pth — alternativa a pip install -e .
+# Instrucciones en INSTALACION.md
+# Reemplazar la línea de abajo con la ruta absoluta real del proyecto:
+# C:\Users\Usuario\Desktop\Estadistica Mencion Socioeconomia\sidoe_system

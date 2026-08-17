@@ -1,0 +1,25 @@
+# .streamlit/config.toml
+# Configuración de Streamlit para SIDOE — ONE RD
+# Ajustes de seguridad y comportamiento del servidor.
+
+[server]
+# Tamaño máximo de carga (MB). Los documentos ONE no superan 10 MB.
+maxUploadSize = 10
+
+# Permite CORS (requerido para que funcione enableXsrfProtection).
+# En producción detrás de proxy, cambiar a false y configurar trustedOrigins.
+enableCORS = true
+
+# Protección anti-XSRF incorporada de Streamlit (activa por defecto).
+enableXsrfProtection = true
+
+# En producción, desactivar el acceso externo directo si está detrás de proxy.
+# headless = true  # Descomentar en servidor de producción ONE
+
+[browser]
+# No recopilar estadísticas de uso de Streamlit.
+gatherUsageStats = false
+
+[logger]
+# Nivel de log del servidor Streamlit.
+level = "warning"

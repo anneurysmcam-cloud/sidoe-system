@@ -1,0 +1,16 @@
+[run]
+source = .
+omit =
+    tests/*
+    */site-packages/*
+    app.py
+    views/*
+    data/ETL_migracion.py
+    data/migraciones_historicas/fix_auditoria_fk.py
+    data/migraciones_historicas/migracion_v2_ajustes.py
+    data/diagnostico_normalizacion_p4.py
+    security/crear_admin.py
+
+[report]
+precision = 1
+skip_empty = True
